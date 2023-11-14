@@ -1,0 +1,9 @@
+# SQLite database
+db.sqlite3
+
+# Python cache directories
+__pycache__/
+*.pyc
+
+# Django migrations
+*/migrations/0*.py
