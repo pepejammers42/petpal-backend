@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'accounts',
 ]
 
@@ -142,3 +143,4 @@ from datetime import timedelta
 SIMPLE_JWT = {
         'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
+AUTH_USER_MODEL = 'accounts.AccountType'

@@ -11,3 +11,9 @@
 - `accounts/shelter/<int:pk>` RetrieveUpdateDestroyAPIView
     - PATCH: update the profile
     - DELETE: delete the shelter's listings 
+
+## Model
+- create a new manager that replaces the User.
+- update the auth model using new custom base user
+-
+
