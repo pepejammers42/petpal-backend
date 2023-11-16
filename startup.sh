@@ -18,8 +18,8 @@ fi
 
 # VENV
 echo "Creating virtual environment..."
-python3 -m venv venv
-source ./venv/bin/activate
+python3 -m venv ./petpal/venv
+source ./petpal/venv/bin/activate
 
 # INSTALL REQ PACKAGES
 echo "Installing required packages..."
@@ -27,7 +27,7 @@ pip install django djangorestframework Pillow djangorestframework-simplejwt
 
 # MIGRATE
 echo "Running Django management commands..."
-python3 ./manage.py makemigrations
-python3 ./manage.py migrate
+python3 ./petpal/manage.py makemigrations
+python3 ./petpal/manage.py migrate
 
 echo "Completed."
