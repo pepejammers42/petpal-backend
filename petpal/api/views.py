@@ -10,7 +10,7 @@ class LoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(email=email, password=password)
         if user:
             refresh = RefreshToken.for_user(user)
             return Response({

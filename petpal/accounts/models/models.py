@@ -13,8 +13,8 @@ class UserManager(BaseUserManager):
         elif self.model == Shelter:
             user = Shelter(email=self.normalize_email(email), **extra_fields)
         else:
-            # user = Shelter(email=self.normalize_email(email), **extra_fields)
-            raise ValueError(f"Invalid account type.")
+            user = Shelter(email=self.normalize_email(email), **extra_fields)
+            # raise ValueError(f"Invalid account type.")
             
         user.set_password(password)
         user.save(using=self._db)
@@ -24,20 +24,9 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_admin', True)
         return self.create_user(email, password, **extra_fields)
 
-
-class AccountType(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name="email address",
-        max_length=255,
-        unique=True,
-    )
-    is_active = models.BooleanField(default=True)
+class AuthUser(AbstractBaseUser):
+    email = models.EmailField(max_length=255, unique=True)
     is_admin = models.BooleanField(default=False)
-    last_login = models.DateTimeField(auto_now=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    phone_number = models.CharField(max_length=10)
-
 
     objects = UserManager()
 
@@ -57,14 +46,24 @@ class AccountType(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
-class Seeker(AccountType):
+class Seeker(AuthUser):
+    is_active = models.BooleanField(default=True)
+    # last_login = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    phone_number = models.CharField(max_length=10)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     location = models.CharField(max_length=100)
     preference = models.CharField(max_length=100)
 
 
-class Shelter(AccountType):
+class Shelter(AuthUser):
+    is_active = models.BooleanField(default=True)
+    # last_login = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    phone_number = models.CharField(max_length=10)
     shelter_name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     description = models.TextField()

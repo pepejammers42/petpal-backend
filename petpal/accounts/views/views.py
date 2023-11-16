@@ -8,20 +8,10 @@ from ..serializers import ShelterSerializer, SeekerSerializer
 class ShelterListCreateAPIView(ListCreateAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
+    permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        # Extract user-related data from the request
-        user_data = {
-            'email': serializer.validated_data.pop('email', None),
-            'password': serializer.validated_data.pop('password', None),
-            # Include other user fields if necessary
-        }
-
-        # Create a User instance
-        user = Shelter.objects.create_user(**user_data)
-
-        # Save the Shelter instance with the created user
-        serializer.save(user=user)
+        serializer.save()
 
 class SeekerListCreateAPIView(ListCreateAPIView):
     queryset = Seeker.objects.all()

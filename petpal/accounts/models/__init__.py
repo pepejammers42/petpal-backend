@@ -1,1 +1,1 @@
-from .models import AccountType, Seeker, Shelter
+from .models import Seeker, Shelter, AuthUser

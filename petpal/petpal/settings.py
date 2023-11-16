@@ -143,4 +143,10 @@ from datetime import timedelta
 SIMPLE_JWT = {
         'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
-AUTH_USER_MODEL = 'accounts.AccountType'
+
+AUTH_USER_MODEL = 'accounts.AuthUser'
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailAuth',
+    'django.contrib.auth.backends.ModelBackend',
+]
