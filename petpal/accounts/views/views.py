@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
 
 from ..models import Shelter, Seeker
 from ..serializers import ShelterSerializer, SeekerSerializer
@@ -14,8 +13,7 @@ class ShelterListCreateAPIView(ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
-class SeekerListCreateAPIView(ListCreateAPIView):
-    queryset = Seeker.objects.all()
+class SeekerCreateAPIView(CreateAPIView):
     serializer_class = SeekerSerializer
     permission_classes = [AllowAny]
 
@@ -36,3 +34,8 @@ class ShelterRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         return get_object_or_404(Shelter, pk=self.kwargs['pk'])
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
