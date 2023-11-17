@@ -22,7 +22,7 @@ class SeekerSerializer(ModelSerializer):
 
     class Meta:
         model = Seeker
-        fields = ['email', 'password', 'first_name', 'last_name', 'avatar', 'phone_number', 'location', 'preference']
+        fields = ['id','email', 'password', 'first_name', 'last_name', 'avatar', 'phone_number', 'location', 'preference']
 
     def create(self, validated_data):
 

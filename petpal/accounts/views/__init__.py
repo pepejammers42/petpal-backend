@@ -1,1 +1,2 @@
-from .views import ShelterListCreateAPIView, SeekerListCreateAPIView
+from .views import ShelterListCreateAPIView, SeekerListCreateAPIView,\
+SeekerRetrieveUpdateDestroyAPIView, ShelterRetrieveUpdateDestroyAPIView
