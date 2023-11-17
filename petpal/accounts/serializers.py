@@ -7,7 +7,7 @@ class ShelterSerializer(ModelSerializer):
 
     class Meta:
         model = Shelter
-        fields = ['email', 'password', 'shelter_name', 'avatar', 'phone_number', 'address', 'description']
+        fields = ['id', 'email', 'password', 'shelter_name', 'avatar', 'phone_number', 'address', 'description']
 
     def create(self, validated_data):
         # hash the password
