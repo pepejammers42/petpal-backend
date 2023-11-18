@@ -8,6 +8,7 @@ from .serializers import ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from django.utils import timezone
+from rest_framework.pagination import PageNumberPagination
 
 
 class AppCreate(CreateAPIView):
@@ -48,9 +49,15 @@ class AppRetrieveUpdate(RetrieveUpdateAPIView):
         serializer.validated_data['last_update_time'] = timezone.now()
         serializer.save()  
 
+class ShelterAppListPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+    page_size_query_param = 'page_size'
+
 class ShelterAppList(ListAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = ShelterAppListPagination
 
     def get_queryset(self):
         shelter = self.request.user
