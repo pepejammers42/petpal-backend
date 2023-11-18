@@ -1,1 +1,1 @@
-from .views import PetListingCreateAPIView, PetListingListAPIView, PetListingUpdateAPIView, PetListingDestroyAPIView
+from .views import PetListingListCreate, PetListingRetrieveUpdateDestroy

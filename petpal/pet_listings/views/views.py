@@ -1,9 +1,5 @@
-from rest_framework.generics import (
-    CreateAPIView,
-    ListAPIView,
-    UpdateAPIView,
-    DestroyAPIView,
-)
+from django.shortcuts import get_object_or_404
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
 from rest_framework.response import Response
 
@@ -14,64 +10,40 @@ from ..serializers import PetListingSerializer
 TODO: 
 - Filtering options (modify listapiview get_queryset)
 """
+DEFAULT_STATUS_FILTER = 'available'
 
-class PetListingCreateAPIView(CreateAPIView):
-    queryset = PetListing.objects.all()
+class PetListingListCreate(ListCreateAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        # self is the shelter
-        # status should be available at the time of creation
-        serializer.save(shelter=self, status="available")
-
-class PetListingListAPIView(ListAPIView):
-    queryset = PetListing.objects.all()
-    serializer_class = PetListingSerializer
-    permission_classes = [permissions.AllowAny] # All pet listings can be viewed, regardless of status, unless they are deleted.
 
     def get_queryset(self):
         queryset = PetListing.objects.all()
 
         # Retrieve filter parameters
         shelter = self.request.query_params.get('shelter', None)
-        status = self.request.query_params.get('status', None)
-        breed = self.request.query_params.get('breed', None)
-        age = self.request.query_params.get('age', None)
-        size = self.request.query_params.get('size', None)
-        color = self.request.query_params.get('color', None)
-        gender = self.request.query_params.get('gender', None)
+        status = self.request.query_params.get('status', DEFAULT_STATUS_FILTER)
+        sort_by = self.request.query_params.get('sort_by', None)
 
         # Apply sorting based on parameters
         if shelter:
-            queryset = queryset.filter(shelter__name__icontains=shelter)
+            queryset = queryset.filter(shelter__shelter_name__icontains=shelter)
 
         if status:
             queryset = queryset.filter(status=status)
 
-        if breed:
-            queryset = queryset.filter(breed__icontains=breed)
-
-        if age:
-            queryset = queryset.filter(age=age)
-
-        if size:
-            queryset = queryset.filter(size=size)
-
-        if color:
-            queryset = queryset.filter(color__icontains=color)
-
-        if gender:
-            queryset = queryset.filter(gender=gender)
+        if sort_by:
+            queryset = queryset.order_by(sort_by)
 
         return queryset
+    
+    def perform_create(self, serializer): # Called after a listing is created
+        # self is the shelter
+        # status should be available at the time of creation
+        serializer.save(shelter=self, status="available")
 
-class PetListingUpdateAPIView(UpdateAPIView):
-    queryset = PetListing.objects.all()
+class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class PetListingDestroyAPIView(DestroyAPIView):
-    queryset = PetListing.objects.all()
-    serializer_class = PetListingSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    def get_object(self):
+        return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self)
