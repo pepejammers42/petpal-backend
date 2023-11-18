@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 
 """
 TODO:
-- Add foreign keys to applications and comments
-- Make some of the fields adjusted
+- Ensure fields that should be required are actually required.
 """
 
 GENDER_CHOICES = [
