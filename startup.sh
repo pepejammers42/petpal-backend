@@ -23,7 +23,7 @@ source ./petpal/venv/bin/activate
 
 # INSTALL REQ PACKAGES
 echo "Installing required packages..."
-pip install django djangorestframework Pillow djangorestframework-simplejwt
+pip install django djangorestframework Pillow djangorestframework-simplejwt drf_yasg
 
 # MIGRATE
 echo "Running Django management commands..."
