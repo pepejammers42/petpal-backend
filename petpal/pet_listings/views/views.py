@@ -46,7 +46,7 @@ class PetListingListCreate(ListCreateAPIView):
     def perform_create(self, serializer): # Called after a pet listing is created
         # self is the shelter
         # status should be available at the time of creation
-        serializer.save(shelter=self, status="available")
+        serializer.save(shelter=self.request.user, status="available")
 
 class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
@@ -54,4 +54,4 @@ class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         # Search for the pet listing with this id and owned by the current shelter
-        return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self)
+        return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self.request.user)
