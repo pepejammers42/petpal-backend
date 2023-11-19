@@ -30,14 +30,14 @@ class SeekerRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         
         seeker = get_object_or_404(Seeker, pk=self.kwargs['pk'])
         
-        if isinstance(self.request.user, Shelter):
-            # TODO: Check if this works!
-            check_app = Applications.objects.filter(applicant=seeker, pet_listing__shelter=self.request.user).exists()
+        # if isinstance(self.request.user, Shelter):
+        #     # TODO: Check if this works!
+        #     check_app = Applications.objects.filter(applicant=seeker, pet_listing__shelter=self.request.user).exists()
 
-            if check_app:
-                return seeker
-            else:
-                raise PermissionDenied("You do not have permission to view this user's profile.")
+        #     if check_app:
+        #         return seeker
+        #     else:
+        #         raise PermissionDenied("You do not have permission to view this user's profile.")
         return seeker
         
 
