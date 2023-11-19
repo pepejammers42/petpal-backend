@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_yasg',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +131,6 @@ MEDIA_URL = "media/"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -141,5 +142,12 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+AUTH_USER_MODEL = 'accounts.AuthUser'
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailAuth',
+    'django.contrib.auth.backends.ModelBackend',
+]
