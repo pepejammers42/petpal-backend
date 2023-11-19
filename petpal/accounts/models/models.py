@@ -51,11 +51,11 @@ class Seeker(AuthUser):
     # last_login = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    phone_number = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=10, blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    location = models.CharField(max_length=100)
-    preference = models.CharField(max_length=100)
+    location = models.CharField(max_length=100, blank=True)
+    preference = models.CharField(max_length=100, blank=True)
 
 
 class Shelter(AuthUser):
@@ -63,8 +63,8 @@ class Shelter(AuthUser):
     # last_login = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    phone_number = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=10, blank=True)
     shelter_name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
