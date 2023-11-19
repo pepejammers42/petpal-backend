@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.conf import settings
 
 """
 TODO:
@@ -37,7 +37,8 @@ class PetListing(models.Model):
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10)
     
     # If a shelter is deleted, all its applications should be removed
-    shelter = models.ForeignKey(User, on_delete=models.CASCADE)
+    shelter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
 
     # Optional fields (use blank=True, null=True)
     medical_history = models.TextField(blank=True, null=True)

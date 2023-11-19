@@ -1,8 +1,10 @@
 from .models import PetListing
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, CharField
 
 class PetListingSerializer(ModelSerializer):
+    shelter = PrimaryKeyRelatedField(read_only=True)
+    status = CharField(read_only=True)
+
     class Meta:
         model = PetListing
-        # Serialize all fields but shelter and status, which are automatically set
-        fields = ["name", "description", "breed", "age", "size", "color", "gender", "medical_history", "behavior", "special_needs"]
+        fields = '__all__'
