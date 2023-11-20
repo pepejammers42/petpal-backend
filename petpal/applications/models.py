@@ -5,10 +5,10 @@ from accounts.models import Seeker
 
 class Application(models.Model):
     STATUS_CHOICES = [
-        'pending',
-        'accepted',
-        'denied',
-        'withdrawn'
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('denied', 'Denied'),
+        ('withdrawn', 'Withdrawn')
     ]
 
     pet_listing = models.ForeignKey(PetListing, on_delete=models.CASCADE)
