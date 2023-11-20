@@ -39,5 +39,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('pet_listings/', include('pet_listings.urls')),
     path('admin/', admin.site.urls),
+    path('', include('comments.urls')),
 ] + \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
