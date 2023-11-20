@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView, ListCreateAPIView
 # Create your views here.
 from .models import Application
 from pet_listings.models.models import PetListing
@@ -8,28 +8,26 @@ from accounts.models.models import Seeker
 from .serializers import ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from django.utils import timezone
 
 
-class ApplicationCreate(CreateAPIView):
+class ApplicationCreate(ListCreateAPIView):
+    queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         pet = get_object_or_404(PetListing, id=self.kwargs['pk'])
 
-        if pet.status == 'available':
-            if not isinstance(self.request.user, Seeker):
-                return Response({'detail': 'User must be a Seeker to create an application.'}, status=status.HTTP_400_BAD_REQUEST)
+        if pet.status != 'available':
+            raise ValidationError({'detail': 'Pet is not available for application.'})
 
-            if serializer.is_valid():
-                serializer.save(applicant=self.request.user, pet_listing=pet)
-            else:
-                print(serializer.errors)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({'detail': 'Pet is not available for application.'}, status=status.HTTP_404_NOT_FOUND)
+        if not isinstance(self.request.user, Seeker):
+            raise ValidationError({'detail': 'User must be a Seeker to create an application.'})
+
+        serializer.save()
 
 
 class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):

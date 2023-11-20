@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'accounts',
     'pet_listings',
+    'notifications',
 ]
 
 MIDDLEWARE = [

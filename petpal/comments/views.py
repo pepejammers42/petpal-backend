@@ -5,7 +5,7 @@ from accounts.models import Shelter, AuthUser
 from applications.models import Application
 from django.contrib.contenttypes.models import ContentType
 from .serializers import CommentSerializer
-from permissions import IsApplicationRelated
+from .permissions import IsApplicationRelated
 # Create your views here.
 class ShelterCommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer

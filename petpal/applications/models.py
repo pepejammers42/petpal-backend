@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from pet_listings.models.models import PetListing
+from pet_listings.models import PetListing
 from accounts.models import Seeker
 
 class Application(models.Model):
