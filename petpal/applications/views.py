@@ -24,7 +24,9 @@ class ApplicationCreate(ListCreateAPIView):
         if pet.status != 'available':
             raise ValidationError({'detail': 'Pet is not available for application.'})
 
-        if not isinstance(self.request.user, Seeker):
+        try:
+            _ = self.request.user.seeker
+        except Seeker.DoesNotExist:
             raise ValidationError({'detail': 'User must be a Seeker to create an application.'})
 
         serializer.save()
