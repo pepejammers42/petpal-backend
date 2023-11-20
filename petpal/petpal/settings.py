@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'applications',
+    'drf_yasg',
+    'accounts',
+    'pet_listings',
 ]
 
 MIDDLEWARE = [
@@ -130,10 +133,9 @@ MEDIA_URL = "media/"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_AUTHENTIFICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -144,5 +146,12 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+AUTH_USER_MODEL = 'accounts.AuthUser'
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailAuth',
+    'django.contrib.auth.backends.ModelBackend',
+]
