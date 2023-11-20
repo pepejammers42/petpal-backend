@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import AppCreate, AppRetrieveUpdate, ShelterAppList
+from .views import ApplicationCreate, ApplicationRetrieveUpdate, ShelterApplicationList
 
 urlpatterns = [
-    path('/pets/<int:pk>/applications', AppCreate.as_view()),
-    path('/applications/<int:pk>', AppRetrieveUpdate.as_view()),
-    path('/applications/', ShelterAppList.as_view()),
+    path('pets/<int:pk>/applications', ApplicationCreate.as_view()),
+    path('applications/<int:pk>', ApplicationRetrieveUpdate.as_view()),
+    path('applications/', ShelterApplicationList.as_view()),
 ]
 

@@ -3,28 +3,36 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView
 # Create your views here.
 from .models import Application
-from ..pet_listings.models.models import PetListing
+from pet_listings.models.models import PetListing
+from accounts.models.models import Seeker
 from .serializers import ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
-from django.http import HttpResponse
+from rest_framework.response import Response
+from rest_framework import status
 from django.utils import timezone
 
 
-class AppCreate(CreateAPIView):
+class ApplicationCreate(CreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        pet_id = self.kwargs.get('pk')
-        pet = PetListing.objects.get(id=pet_id)
+        pet = get_object_or_404(PetListing, id=self.kwargs['pk'])
 
         if pet.status == 'available':
-            serializer.save(applicant=self.request.user, pet_listing=pet)
+            if not isinstance(self.request.user, Seeker):
+                return Response({'detail': 'User must be a Seeker to create an application.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if serializer.is_valid():
+                serializer.save(applicant=self.request.user, pet_listing=pet)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            HttpResponse(pet.status, status=404)
+            return Response({'detail': 'Pet is not available for application.'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class AppRetrieveUpdate(RetrieveUpdateAPIView):
+class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
@@ -48,7 +56,7 @@ class AppRetrieveUpdate(RetrieveUpdateAPIView):
         serializer.validated_data['last_update_time'] = timezone.now()
         serializer.save()  
 
-class ShelterAppList(ListAPIView):
+class ShelterApplicationList(ListAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
 
