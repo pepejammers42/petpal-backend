@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView, ListAPIView, ListCreateAPIView
 # Create your views here.
 from .models import Application
-from pet_listings.models.models import PetListing
-from accounts.models.models import Seeker
+from pet_listings.models import PetListing
+from accounts.models import Seeker, Shelter
 from .serializers import ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -61,17 +61,22 @@ class ShelterApplicationList(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        shelter = self.request.user
-        queryset = Application.objects.filter(pet_listing__shelter=shelter)
-        status = self.request.query_params.get('status','None')
-        if status:
-            queryset = queryset.filter(status=status)
 
-        sort_by = self.request.query_params.get('sort', None)
-        if sort_by == 'creation_time':
-            queryset = queryset.order_by('creation_time')
-        elif sort_by == 'last_update_time':
-            queryset = queryset.order_by('last_update_time')
+        try:
+            _ = self.request.user.shelter
+        except Shelter.DoesNotExist:
+            raise ValidationError({'detail': 'User must be a Shelter to see applications.'})
+
+        queryset = Application.objects.filter(pet_listing__shelter=self.request.user.shelter)
+        # status = self.request.query_params.get('status','None')
+        # if status:
+        #     queryset = queryset.filter(status=status)
+
+        # sort_by = self.request.query_params.get('sort', None)
+        # if sort_by == 'creation_time':
+        #     queryset = queryset.order_by('creation_time')
+        # elif sort_by == 'last_update_time':
+        #     queryset = queryset.order_by('last_update_time')
 
         return queryset
         
