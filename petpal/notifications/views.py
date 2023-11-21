@@ -7,7 +7,15 @@ from rest_framework.pagination import PageNumberPagination
 from .models import Notification
 from .serializers import NotificationSerializer
 
-# Create your views here.
+LISTING_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
+LISTING_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
+LISTING_PAGINATION_SIZE_PARAM = 'page_size' # Query parameter to read page size from
+
+class NotificationListPagination(PageNumberPagination):
+    page_size = LISTING_PAGINATION_SIZE  # Number of results to display per page (by default)
+    max_page_size = LISTING_PAGINATION_SIZE_MAX # Maximum number of results to display per page
+    page_size_query_param = LISTING_PAGINATION_SIZE_PARAM # Query parameter to read page size from
+
 class NotificationListCreate(ListCreateAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
