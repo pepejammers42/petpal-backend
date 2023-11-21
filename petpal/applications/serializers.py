@@ -17,6 +17,9 @@ class ApplicationSerializer(ModelSerializer):
         if self.context.get('request', None) and self.context['request'].method == 'POST':
             for field_name in set(self.fields) - {'personal_statement'}:
                 self.fields.pop(field_name)
+        if self.context.get('request', None) and self.context['request'].method == 'PUT':
+            for field_name in set(self.fields) - {'status'}:
+                self.fields.pop(field_name)
 
     def create(self, validated_data):
         request = self.context.get('request')
