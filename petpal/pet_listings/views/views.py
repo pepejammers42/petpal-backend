@@ -84,7 +84,7 @@ class PetListingListCreate(ListCreateAPIView):
         
         # self is the shelter
         # status should be available at the time of creation
-        serializer.save(shelter=self.request.user.shelter, status="available")
+        serializer.save(shelter=self.request.user.shelter)
 
 class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
