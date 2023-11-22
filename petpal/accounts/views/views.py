@@ -3,6 +3,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.core.exceptions import PermissionDenied
 from drf_yasg.utils import swagger_auto_schema
+from applications.models import Application
+from rest_framework.exceptions import ValidationError
 
 from ..models import Shelter, Seeker
 from ..serializers import ShelterSerializer, SeekerSerializer
@@ -48,15 +50,23 @@ class SeekerRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     def get_object(self):
         seeker = get_object_or_404(Seeker, pk=self.kwargs['pk'])
         
-        # if isinstance(self.request.user, Shelter):
-        #     # TODO: Check if this works!
-        #     check_app = Applications.objects.filter(applicant=seeker, pet_listing__shelter=self.request.user).exists()
+        try: 
+            if self.request.user.shelter:
+                check_app = Application.objects.filter(applicant=seeker, pet_listing__shelter=self.request.user).exists()
 
-        #     if check_app:
-        #         return seeker
-        #     else:
-        #         raise PermissionDenied("You do not have permission to view this user's profile.")
+                if check_app:
+                    return seeker
+                else:
+                    raise ValidationError({'detail': 'You cannot view this seeker since it does not have any active applications with you.'})
+        except Shelter.DoesNotExist:
+            try:
+                if self.request.user.seeker:
+                    return seeker
+            except Seeker.DoesNotExist:
+                raise ValidationError({'detail': 'User must be a Seeker or Shelter related to this application to access this resource.'})
+
         return seeker
+
     def get(self, request, *args, **kwargs):
         """
             Get a specific seeker's profile.
