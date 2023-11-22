@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.contenttypes.models import ContentType
 from .models import Notification
-from .serializers import NotificationSerializer
+from .serializers import NotificationSerializerC, NotificationSerializerRUD
 
 LISTING_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
 LISTING_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
@@ -17,8 +17,9 @@ class NotificationListPagination(PageNumberPagination):
     page_size_query_param = LISTING_PAGINATION_SIZE_PARAM # Query parameter to read page size from
 
 class NotificationListCreate(ListCreateAPIView):
-    serializer_class = NotificationSerializer
+    serializer_class = NotificationSerializerC
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = NotificationListPagination
 
     def get_queryset(self):
         queryset = Notification.objects.all()
@@ -41,8 +42,9 @@ class NotificationListCreate(ListCreateAPIView):
             serializer.save(sender=self.request.user, content_type=content_type, object_id=object_id)
 
 class NotificationRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
-    serializer_class = NotificationSerializer
+    serializer_class = NotificationSerializerRUD
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = NotificationListPagination
 
     def get_object(self):
         # Users (shelter and seeker) can only view their own notifications (1 mark)
