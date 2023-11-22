@@ -4,6 +4,7 @@ from rest_framework import permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
 from accounts.models import Shelter
+from drf_yasg.utils import swagger_auto_schema
 
 from ..models import PetListing
 from ..serializers import PetListingSerializer
@@ -22,6 +23,17 @@ class PetListingListCreate(ListCreateAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PetListingListPagination
+
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of all pet listings available.
+        """
+        return super().get(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        """
+            Create a pet listing with the required payloads.
+        """
+        return super().post(request, *args, **kwargs)
 
     def get_queryset(self): # Called when querying for pet listings
         queryset = PetListing.objects.all()
@@ -78,6 +90,28 @@ class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PetListingListPagination
+
+    @swagger_auto_schema(auto_schema=None)
+    def patch(self):
+        return
+    
+    def get(self, request, *args, **kwargs):
+        """
+            Get a specific pet listing belong to that shelter.
+        """
+        return super().get(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        """
+            Update a pet listing belong to that shelter.
+        """
+        return super().put(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        """
+            Delete a pet listing belong to that shelter.
+        """
+        return super().delete(request, *args, **kwargs)
 
     def get_object(self):
         # Ensure this user is a shelter (sekeers can't make pet listings)

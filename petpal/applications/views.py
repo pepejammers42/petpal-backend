@@ -9,12 +9,24 @@ from .serializers import ApplicationSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
+from drf_yasg.utils import swagger_auto_schema
 
 
 class ApplicationCreate(ListCreateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of applications for the logged in Seeker.
+        """
+        return super().get(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        """
+            Create a brand new application with the logged in Seeker to the pet.
+        """
+        return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         pet = get_object_or_404(PetListing, id=self.kwargs['pk'])
@@ -61,6 +73,21 @@ class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
     
+
+    @swagger_auto_schema(auto_schema=None)
+    def patch(self):
+        return
+    def put(self, request, *args, **kwargs):
+        """
+            Update an application, available to the Shelter and Seeker.
+        """
+        return super().put(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of applications for the logged in Shelter.
+        """
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         user = self.request.user
 
@@ -100,6 +127,12 @@ class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
 class ShelterApplicationList(ListAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of applications for the logged in shelter.
+        """
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
 

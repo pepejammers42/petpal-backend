@@ -6,6 +6,7 @@ from applications.models import Application
 from django.contrib.contenttypes.models import ContentType
 from .serializers import CommentSerializer
 from rest_framework.pagination import PageNumberPagination
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 COMMENT_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
@@ -21,6 +22,12 @@ class ShelterCommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def post(self, request, *args, **kwargs):
+        """
+            Create a comment to the shelter.
+        """
+        return super().post(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         shelter_id = self.kwargs['shelter_id']
         get_object_or_404(Shelter, pk=shelter_id) #check shelter exists
@@ -32,6 +39,13 @@ class ShelterCommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = CommentPagination
+    
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of all comments to the shelter.
+        """
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         shelter_id = self.kwargs['shelter_id']
         content_type = ContentType.objects.get_for_model(Shelter)
@@ -41,6 +55,13 @@ class ShelterCommentListView(generics.ListAPIView):
 class ApplicationCommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        """
+            Create a comment to the application.
+        """
+        return super().post(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         application_id = self.kwargs['application_id']
         application = get_object_or_404(Application, pk=application_id)
@@ -58,6 +79,12 @@ class ApplicationCommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = CommentPagination
+    
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of all comments to the application.
+        """
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         application_id = self.kwargs['application_id']

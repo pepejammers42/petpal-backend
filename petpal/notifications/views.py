@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.contrib.contenttypes.models import ContentType
 from .models import Notification
 from .serializers import NotificationSerializerC, NotificationSerializerRUD
+from drf_yasg.utils import swagger_auto_schema
 
 LISTING_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
 LISTING_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
@@ -19,6 +20,18 @@ class NotificationListCreate(ListCreateAPIView):
     serializer_class = NotificationSerializerC
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = NotificationListPagination
+
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of all notifications for that user.
+        """
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+            Create a notification to a user with a message.
+        """
+        return super().post(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = Notification.objects.all()
@@ -44,6 +57,28 @@ class NotificationRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = NotificationSerializerRUD
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = NotificationListPagination
+
+    
+    def get(self, request, *args, **kwargs):
+        """
+            Retreive a specific notification. 
+        """
+        return super().get(request, *args, **kwargs)
+    @swagger_auto_schema(auto_schema=None)
+    def patch(self):
+        return
+    
+    def put(self, request, *args, **kwargs):
+        """
+            Update a notification to be read.
+        """
+        return super().put(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        """
+            Delete a notification.
+        """
+        return super().delete(request, *args, **kwargs)
 
     def get_object(self):
         # Users (shelter and seeker) can only view their own notifications (1 mark)
