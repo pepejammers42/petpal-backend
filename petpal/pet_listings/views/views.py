@@ -9,9 +9,7 @@ from accounts.models import Seeker, Shelter
 from ..models import PetListing
 from ..serializers import PetListingSerializer
 
-"""
-TODO:
-"""
+
 LISTING_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
 LISTING_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
 LISTING_PAGINATION_SIZE_PARAM = 'page_size' # Query parameter to read page size from
@@ -24,6 +22,7 @@ class PetListingListPagination(PageNumberPagination):
 class PetListingListCreate(ListCreateAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PetListingListPagination
 
     def get_queryset(self): # Called when querying for pet listings
         queryset = PetListing.objects.all()
@@ -79,6 +78,7 @@ class PetListingListCreate(ListCreateAPIView):
 class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PetListingListPagination
 
     def get_object(self):
         # Ensure this user is a shelter (sekeers can't make pet listings)
