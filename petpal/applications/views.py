@@ -60,13 +60,6 @@ class ApplicationCreate(ListCreateAPIView):
         except Seeker.DoesNotExist:
             raise ValidationError({'detail': "You do not have permission to access this resource."})
 
-        """
-        if not isinstance(user, Seeker):
-            raise ValidationError({'detail': "You do not have permission to access this resource."})
-
-        return Application.objects.filter(applicant=user)
-        """
-
 
 class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
     queryset = Application.objects.all()
@@ -84,7 +77,7 @@ class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
         return super().put(request, *args, **kwargs)
     def get(self, request, *args, **kwargs):
         """
-            Get a list of applications for the logged in Shelter.
+            Get an application for the logged in Shelter and Seeker.
         """
         return super().get(request, *args, **kwargs)
 
@@ -130,7 +123,7 @@ class ShelterApplicationList(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         """
-            Get a list of applications for the logged in shelter.
+            Get a list of applications for the logged in Shelter.
         """
         return super().get(request, *args, **kwargs)
 
