@@ -1,5 +1,5 @@
 from .models import PetListing
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField, CharField
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 class PetListingSerializer(ModelSerializer):
     shelter = PrimaryKeyRelatedField(read_only=True)

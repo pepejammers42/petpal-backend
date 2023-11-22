@@ -36,6 +36,8 @@ class PetListing(models.Model):
     color = models.CharField(max_length=20)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10)
     
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True) # Gotta have a picture!
+
     # If a shelter is deleted, all its applications should be removed
     shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
 
