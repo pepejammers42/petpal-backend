@@ -74,12 +74,18 @@ class PetListingListCreate(ListCreateAPIView):
         
         # self is the shelter
         # status should be available at the time of creation
-        serializer.save(shelter=self.request.user, status="available")
+        serializer.save(shelter=self.request.user.shelter, status="available")
 
 class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = PetListingSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        # Ensure this user is a shelter (sekeers can't make pet listings)
+        try:
+            _ = self.request.user.shelter
+        except Shelter.DoesNotExist:
+            raise ValidationError({'detail': 'User must be a Shelter to create an application.'})
+        
         # Search for the pet listing with this id and owned by the current shelter
-        return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self.request.user)
+        return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self.request.user.shelter)

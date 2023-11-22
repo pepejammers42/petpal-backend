@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-
+from accounts.models import Seeker, Shelter
 """
 TODO:
 - Ensure fields that should be required are actually required.
@@ -37,7 +37,7 @@ class PetListing(models.Model):
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10)
     
     # If a shelter is deleted, all its applications should be removed
-    shelter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    shelter = models.ForeignKey(Shelter, on_delete=models.CASCADE)
 
 
     # Optional fields (use blank=True, null=True)
