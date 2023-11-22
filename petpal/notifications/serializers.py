@@ -8,5 +8,5 @@ It is fine to not do the above, but instead make a notification read the first t
 class NotificationSerializer(ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['notification_type', 'message', 'creation_time', 'last_update_time', 'is_read', 'recipient', 'sender', 'content_type', 'object_id', 'content_object']
-        read_only_fields = ['notification_type', 'message', 'creation_time', 'last_update_time', 'recipient', 'sender', 'content_type', 'object_id', 'content_object']
+        fields = ['id','notification_type', 'message', 'creation_time', 'last_update_time', 'is_read', 'recipient', 'sender', 'content_type', 'object_id']
+        read_only_fields = ['id','sender', 'content_type', 'object_id']

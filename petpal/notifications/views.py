@@ -3,7 +3,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-
+from django.contrib.contenttypes.models import ContentType
 from .models import Notification
 from .serializers import NotificationSerializer
 
@@ -32,8 +32,13 @@ class NotificationListCreate(ListCreateAPIView):
 
         return queryset
     
-    def perform_create(self, serializer):
-        serializer.save(recipient=self.request.user, is_read = False)
+    def perform_create(self, serializer):    
+        recipient = serializer.validated_data.get('recipient', None)
+
+        if recipient:   
+            content_type = ContentType.objects.get_for_model(recipient) # Get the type of the selected recipient
+            object_id = recipient.id # Get the id of the current user
+            serializer.save(sender=self.request.user, content_type=content_type, object_id=object_id)
 
 class NotificationRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
     serializer_class = NotificationSerializer
