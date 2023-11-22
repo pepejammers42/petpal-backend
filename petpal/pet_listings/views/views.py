@@ -40,25 +40,25 @@ class PetListingListCreate(ListCreateAPIView):
 
         # Apply sorting based on parameters
         if shelter:
-            queryset = queryset.filter(shelter__shelter_name__icontains=shelter)
+            queryset = queryset.filter(shelter__shelter_name=shelter)
 
         if status:
             queryset = queryset.filter(status=status)
 
         if breed:
-            queryset = queryset.filter(breed__icontains=breed)
+            queryset = queryset.filter(breed=breed)
 
         if age:
             queryset = queryset.filter(age=age)
 
         if size:
-            queryset = queryset.filter(size__icontains=size)
+            queryset = queryset.filter(size=size)
 
         if color:
-            queryset = queryset.filter(color__icontains=color)
+            queryset = queryset.filter(color=color)
 
         if gender:
-            queryset = queryset.filter(gender__icontains=gender)
+            queryset = queryset.filter(gender=gender)
 
         if sort_by:
             queryset = queryset.order_by(sort_by)
@@ -86,6 +86,6 @@ class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
             _ = self.request.user.shelter
         except Shelter.DoesNotExist:
             raise ValidationError({'detail': 'User must be a Shelter to create an application.'})
-        
+
         # Search for the pet listing with this id and owned by the current shelter
         return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self.request.user.shelter)
