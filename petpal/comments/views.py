@@ -45,10 +45,13 @@ class ApplicationCommentCreateView(generics.CreateAPIView):
         application_id = self.kwargs['application_id']
         application = get_object_or_404(Application, pk=application_id)
         #only related seeker and shelter of that application can comment
-        if application.applicant != self.request.user and application.pet_listing.shelter  != self.request.user:
+        # has to .email otherwise although it prints the same, but still different object
+        if application.applicant.email != self.request.user.email and application.pet_listing.shelter.email  != self.request.user.email:
+            #print(application.applicant, self.request.user, application.pet_listing.shelter)
             raise exceptions.PermissionDenied("You do not have permission to comment on this application.")
         content_type = ContentType.objects.get_for_model(Application)
         serializer.save(user=self.request.user, object_id=application_id, content_type=content_type)
+        application.save() #to save last update time
                                             
 
 class ApplicationCommentListView(generics.ListAPIView):
@@ -60,7 +63,8 @@ class ApplicationCommentListView(generics.ListAPIView):
         application_id = self.kwargs['application_id']
         application = get_object_or_404(Application, pk=application_id)
         #only related seeker and shelter of that application can see comment
-        if application.applicant != self.request.user and application.pet_listing.shelter  != self.request.user:
+        # has to .email otherwise although it prints the same, but still different object
+        if application.applicant.email != self.request.user.email and application.pet_listing.shelter.email  != self.request.user.email:
             raise exceptions.PermissionDenied("You do not have permission to see comments.")
         content_type = ContentType.objects.get_for_model(Application)
         return Comment.objects.filter(content_type=content_type, object_id=application_id).order_by('-created_at') #descending order
