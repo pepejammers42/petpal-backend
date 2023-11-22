@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # UPDATE APT
+sudo apt-add-repository ppa:deadsnakes/ppa -y
 sudo apt update
 
 # PYTHON
@@ -24,10 +25,5 @@ source ./petpal/venv/bin/activate
 # INSTALL REQ PACKAGES
 echo "Installing required packages..."
 pip install django djangorestframework Pillow djangorestframework-simplejwt drf_yasg
-
-# MIGRATE
-echo "Running Django management commands..."
-python3 ./petpal/manage.py makemigrations
-python3 ./petpal/manage.py migrate
 
 echo "Completed."
