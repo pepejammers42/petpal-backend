@@ -28,7 +28,7 @@ class PetListingListCreate(ListCreateAPIView):
 
         # Retrieve filter parameters
         shelter = self.request.query_params.get('shelter', None)
-        status = self.request.query_params.get('status', "available")
+        status = self.request.query_params.get('status', "available") # Default status filter should be "available".
         breed = self.request.query_params.get('breed', None)
         age = self.request.query_params.get('age', None)
         size = self.request.query_params.get('size', None)
