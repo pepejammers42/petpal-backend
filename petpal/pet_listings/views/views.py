@@ -1,10 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import permissions
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import ValidationError
-from accounts.models import Seeker, Shelter
+from accounts.models import Shelter
 
 from ..models import PetListing
 from ..serializers import PetListingSerializer
@@ -69,7 +68,7 @@ class PetListingListCreate(ListCreateAPIView):
         try:
             _ = self.request.user.shelter
         except Shelter.DoesNotExist:
-            raise ValidationError({'detail': 'User must be a Shelter to create an application.'})
+            raise ValidationError({'detail': 'User must be a Shelter to create a Pet Listing.'})
         
         # self is the shelter
         # status should be available at the time of creation
@@ -82,10 +81,11 @@ class PetListingRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
     def get_object(self):
         # Ensure this user is a shelter (sekeers can't make pet listings)
+        # NOTE: Yes, only the shelter can see the pet listing RUD (other shelters or seekers can't, but they can access it from the Create view above)
         try:
             _ = self.request.user.shelter
         except Shelter.DoesNotExist:
-            raise ValidationError({'detail': 'User must be a Shelter to create an application.'})
+            raise ValidationError({'detail': 'User must be a Shelter to update a Pet Listing.'})
 
         # Search for the pet listing with this id and owned by the current shelter
         return get_object_or_404(PetListing, id=self.kwargs['pk'], shelter=self.request.user.shelter)
