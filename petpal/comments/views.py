@@ -5,7 +5,18 @@ from accounts.models import Shelter, AuthUser
 from applications.models import Application
 from django.contrib.contenttypes.models import ContentType
 from .serializers import CommentSerializer
+from rest_framework.pagination import PageNumberPagination
+
 # Create your views here.
+COMMENT_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
+COMMENT_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
+COMMENT_PAGINATION_SIZE_PARAM = 'page_size' # Query parameter to read page size from
+
+class CommentPagination(PageNumberPagination):
+    page_size = COMMENT_PAGINATION_SIZE  # Number of results to display per page (by default)
+    max_page_size = COMMENT_PAGINATION_SIZE_MAX # Maximum number of results to display per page
+    page_size_query_param = COMMENT_PAGINATION_SIZE_PARAM # Query parameter to read page size from
+    
 class ShelterCommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -20,7 +31,7 @@ class ShelterCommentCreateView(generics.CreateAPIView):
 class ShelterCommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    pagination_class = CommentPagination
     def get_queryset(self):
         shelter_id = self.kwargs['shelter_id']
         content_type = ContentType.objects.get_for_model(Shelter)
@@ -43,6 +54,7 @@ class ApplicationCommentCreateView(generics.CreateAPIView):
 class ApplicationCommentListView(generics.ListAPIView):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = CommentPagination
 
     def get_queryset(self):
         application_id = self.kwargs['application_id']
