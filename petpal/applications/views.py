@@ -29,12 +29,51 @@ class ApplicationCreate(ListCreateAPIView):
 
         serializer.save()
 
+    def list(self, request, *args, **kwargs):
+        # Check if the user is a Seeker, otherwise deny access
+        try:
+            _ = self.request.user.seeker
+        except Seeker.DoesNotExist:
+            raise ValidationError({'detail': 'User must be a Seeker to create an application.'})
+
+        return super().list(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        # Filter applications based on the current user
+        user = self.request.user
+
+        try:
+            if self.request.user.seeker:
+                return Application.objects.filter(applicant=user)
+        except Seeker.DoesNotExist:
+            raise ValidationError({'detail': "You do not have permission to access this resource."})
+
+        """
+        if not isinstance(user, Seeker):
+            raise ValidationError({'detail': "You do not have permission to access this resource."})
+
+        return Application.objects.filter(applicant=user)
+        """
+
 
 class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
     
+    def get_queryset(self):
+        user = self.request.user
+
+        try: 
+            if self.request.user.seeker:
+                return Application.objects.filter(applicant=user.seeker)
+        except Seeker.DoesNotExist:
+            try:
+                if self.request.user.shelter:
+                    return Application.objects.filter(pet_listing__shelter=user.shelter)
+            except Shelter.DoesNotExist:
+                raise ValidationError({'detail': 'User must be a Seeker or Shelter related to this application to access this resource.'})
+
     def perform_update(self, serializer):
         application = serializer.instance
 
@@ -51,7 +90,7 @@ class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
                 cur_status = application.status
                 new_status = serializer.validated_data.get('status', None)
                 if (cur_status not in ['pending', 'accepted']) or (new_status not in possible_changes):
-                    raise ValidationError({'detail': 'Pet seeker can only update the status of an appilcation from pending to withdrawn.'})
+                    raise ValidationError({'detail': 'Pet seeker can only update the status of an appilcation from pending or accepted to withdrawn.'})
             except Seeker.DoesNotExist:
                 raise ValidationError({'detail': 'User must be a Seeker or Shelter to update an application.'})
 
@@ -75,7 +114,7 @@ class ShelterApplicationList(ListAPIView):
         if status is not None and status != '':
             queryset = queryset.filter(status=status)
 
-        sort_by = self.request.query_params.get('sort')
+        sort_by = self.request.query_params.get('sort_by')
         if sort_by is not None and sort_by != '':
             if sort_by == 'creation_time':
                 queryset = queryset.order_by('creation_time')
