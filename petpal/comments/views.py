@@ -35,7 +35,7 @@ class ApplicationCommentCreateView(generics.CreateAPIView):
         application_id = self.kwargs['application_id']
         assert get_object_or_404(Application, pk=application_id)
         content_type = ContentType.objects.get_for_model(Application)
-        serializer.save(user=self.request.user, content_type=content_type)
+        serializer.save(user=self.request.user, object_id=application_id, content_type=content_type)
                                             
 
 class ApplicationCommentListView(generics.ListAPIView):

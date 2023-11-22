@@ -21,7 +21,7 @@ class Notification(models.Model):
 
     NOTIFICATION_TYPES = [
         ('message', 'Message'),
-        ('status_update','Status Update')
+        ('status_update','Status Update'),
         ('pet_listing', 'Pet Listing'),
         ('application', 'Application'),
         ('review','Review'),
