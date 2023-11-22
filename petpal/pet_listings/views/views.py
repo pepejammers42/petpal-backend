@@ -31,6 +31,11 @@ class PetListingListCreate(ListCreateAPIView):
         # Retrieve filter parameters
         shelter = self.request.query_params.get('shelter', None)
         status = self.request.query_params.get('status', "available")
+        breed = self.request.query_params.get('breed', None)
+        age = self.request.query_params.get('age', None)
+        size = self.request.query_params.get('size', None)
+        color = self.request.query_params.get('color', None)
+        gender = self.request.query_params.get('gender', None)
         sort_by = self.request.query_params.get('sort_by', None)
 
         # Apply sorting based on parameters
@@ -39,6 +44,21 @@ class PetListingListCreate(ListCreateAPIView):
 
         if status:
             queryset = queryset.filter(status=status)
+
+        if breed:
+            queryset = queryset.filter(breed__icontains=breed)
+
+        if age:
+            queryset = queryset.filter(age=age)
+
+        if size:
+            queryset = queryset.filter(size__icontains=size)
+
+        if color:
+            queryset = queryset.filter(color__icontains=color)
+
+        if gender:
+            queryset = queryset.filter(gender__icontains=gender)
 
         if sort_by:
             queryset = queryset.order_by(sort_by)
