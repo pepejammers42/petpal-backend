@@ -2,8 +2,8 @@ from django.urls import path
 from .views import ApplicationCreate, ApplicationRetrieveUpdate, ShelterApplicationList
 
 urlpatterns = [
-    path('pets/<int:pk>/applications', ApplicationCreate.as_view()),
-    path('applications/<int:pk>', ApplicationRetrieveUpdate.as_view()),
-    path('applications/', ShelterApplicationList.as_view()),
+    path('pets/<int:pk>/', ApplicationCreate.as_view()),
+    path('<int:pk>/', ApplicationRetrieveUpdate.as_view()),
+    path('', ShelterApplicationList.as_view()),
 ]
 

@@ -5,7 +5,7 @@ from accounts.models import Shelter, AuthUser
 from applications.models import Application
 from django.contrib.contenttypes.models import ContentType
 from .serializers import CommentSerializer
-from permissions import IsApplicationRelated
+from .permissions import IsApplicationRelated
 # Create your views here.
 class ShelterCommentCreateView(generics.CreateAPIView):
     serializer_class = CommentSerializer
@@ -35,7 +35,7 @@ class ApplicationCommentCreateView(generics.CreateAPIView):
         application_id = self.kwargs['application_id']
         assert get_object_or_404(Application, pk=application_id)
         content_type = ContentType.objects.get_for_model(Application)
-        serializer.save(user=self.request.user, object_id=shelter_id, content_type=content_type)
+        serializer.save(user=self.request.user, object_id=application_id, content_type=content_type)
                                             
 
 class ApplicationCommentListView(generics.ListAPIView):

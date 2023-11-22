@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.conf import settings
 from accounts.models import AuthUser
 # Create your models here.
 class Comment(models.Model):
