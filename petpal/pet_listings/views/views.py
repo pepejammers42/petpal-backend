@@ -3,6 +3,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.exceptions import ValidationError
+from accounts.models import Seeker, Shelter
 
 from ..models import PetListing
 from ..serializers import PetListingSerializer
@@ -44,6 +46,12 @@ class PetListingListCreate(ListCreateAPIView):
         return queryset
     
     def perform_create(self, serializer): # Called after a pet listing is created
+        # Ensure this user is a shelter (sekeers can't make pet listings)
+        try:
+            _ = self.request.user.shelter
+        except Shelter.DoesNotExist:
+            raise ValidationError({'detail': 'User must be a Shelter to create an application.'})
+        
         # self is the shelter
         # status should be available at the time of creation
         serializer.save(shelter=self.request.user, status="available")
