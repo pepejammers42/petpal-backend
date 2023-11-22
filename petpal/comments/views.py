@@ -24,7 +24,7 @@ class ShelterCommentCreateView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         """
-            Create a comment to the shelter.
+            Create a comment to the shelter with shelter id = <shelter_id>. All logged in users can.
         """
         return super().post(request, *args, **kwargs)
 
@@ -42,7 +42,7 @@ class ShelterCommentListView(generics.ListAPIView):
     
     def get(self, request, *args, **kwargs):
         """
-            Get a list of all comments to the shelter.
+            Get a list of all comments to shelter with shelter id = <shelter_id>. All logged in users can.
         """
         return super().get(request, *args, **kwargs)
 
@@ -58,7 +58,7 @@ class ApplicationCommentCreateView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         """
-            Create a comment to the application.
+            Create a comment to the application with application id = <application_id>. Only related shelter and seeker to application can.
         """
         return super().post(request, *args, **kwargs)
 
@@ -82,7 +82,7 @@ class ApplicationCommentListView(generics.ListAPIView):
     
     def get(self, request, *args, **kwargs):
         """
-            Get a list of all comments to the application.
+            Get a list of all comments to the application with application id = <application_id>. Only related shelter and seeker to application can.
         """
         return super().get(request, *args, **kwargs)
 
