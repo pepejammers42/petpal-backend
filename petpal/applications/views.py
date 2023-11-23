@@ -10,7 +10,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.pagination import PageNumberPagination
 
+LISTING_PAGINATION_SIZE = 10 # Number of results to display per page (by default)
+LISTING_PAGINATION_SIZE_MAX = 20 # Maximum number of results to display per page
+LISTING_PAGINATION_SIZE_PARAM = 'page_size' # Query parameter to read page size from
+
+class ApplicationListPagination(PageNumberPagination):
+    page_size = LISTING_PAGINATION_SIZE  # Number of results to display per page (by default)
+    max_page_size = LISTING_PAGINATION_SIZE_MAX # Maximum number of results to display per page
+    page_size_query_param = LISTING_PAGINATION_SIZE_PARAM # Query parameter to read page size from
 
 class ApplicationCreate(ListCreateAPIView):
     queryset = Application.objects.all()
@@ -120,6 +129,7 @@ class ApplicationRetrieveUpdate(RetrieveUpdateAPIView):
 class ShelterApplicationList(ListAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = ApplicationListPagination
 
     def get(self, request, *args, **kwargs):
         """
